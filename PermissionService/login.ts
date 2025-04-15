@@ -43,13 +43,13 @@ export async function handleLogin(req: OakRequest): Promise<tokens | undefined> 
 }
 
 export async function handleRefreshToken(req: OakRequest): Promise<tokens | undefined> {
-        const { refreshToken } = await req.body.json();
-        const tokens = await JwtUtil.refreshAccessToken(refreshToken);
+    const { refreshToken } = await req.body.json();
+    const tokens = await JwtUtil.refreshAccessToken(refreshToken);
 
-        // if the tokens is null, then the refresh token is invalid
-        if (!tokens) {
-            return;
-        }
+    // if the tokens is null, then the refresh token is invalid
+    if (!tokens) {
+        return;
+    }
 
         return tokens;
 }
