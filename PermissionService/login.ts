@@ -10,7 +10,8 @@ export async function handleLogin(req: OakRequest): Promise<tokens | undefined> 
         logger.info(await req.body.json());
         const { userId, password } = await req.body.json();
         logger.info(`User ${userId} login attempt`);
-        const response = await fetch("http://localhost:4001/login", {
+        // when using docker change it to host.docker.internal:
+        const response = await fetch("http://host.docker.internal:4001/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -46,7 +47,6 @@ export async function handleRefreshToken(req: OakRequest): Promise<tokens | unde
     const { refreshToken } = await req.body.json();
     const tokens = await JwtUtil.refreshAccessToken(refreshToken);
 
-    // if the tokens is null, then the refresh token is invalid
     if (!tokens) {
         return;
     }

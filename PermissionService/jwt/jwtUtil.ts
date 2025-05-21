@@ -23,8 +23,6 @@ export class JwtUtil {
       .setExpirationTime(expirationTime)
       .sign(ACCESS_SECRET_KEY);
 
- logger.info(`User ${user.id} has roles: ${user.roles.map((roleObj: any | Role) => roleObj.role ? roleObj.role.name : roleObj.name)}`);
-
     const refresh = await new jose.SignJWT({
       sub: user.id,
       roles: user.roles.map((roleObj: any | Role) => roleObj.role ? roleObj.role.name : roleObj.name),
@@ -59,21 +57,22 @@ export class JwtUtil {
       { algorithms: ['HS256'] });
       return !!payload.sub;
     } catch {
-
       return false;
     }
   }
 
   public static async refreshAccessToken(refreshToken: string) {
     const valid = await JwtUtil.verifyRefreshToken(refreshToken);
+
     if (!valid) return null;
-  
+
     try {
       const { payload } = await jose.jwtVerify(
         refreshToken, 
         REFRESH_SECRET_KEY,
         { algorithms: ['HS256'] }
       );
+
       if (!payload.sub) return null;
   
       const user: User = {
@@ -88,6 +87,7 @@ export class JwtUtil {
       if (error instanceof Error) {
         logger.error("Error refreshing access token:", error);
       }
+
       return null;
     }
   }
